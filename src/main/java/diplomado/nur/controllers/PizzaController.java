@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -27,13 +28,15 @@ public class PizzaController {
   @PostMapping("/personalizada")
   public ResponseEntity<PizzaResponse> crearPizzaPersonalizada(@RequestBody PizzaRequest req) {
     Pizza pizzaCreada = pizzaServ.crearPizza(req, true);
-    return ResponseEntity.ok(new PizzaResponse(pizzaCreada));
+    return ResponseEntity.status(HttpStatus.CREATED)
+                         .body(new PizzaResponse(pizzaCreada));
   }
   
   @PostMapping("/predefinidas")
   public ResponseEntity<PizzaResponse> crearPizzaPredefinida(@RequestBody PizzaRequest req) {
     Pizza pizzaCreada = pizzaServ.crearPizza(req, false);
-    return ResponseEntity.ok(new PizzaResponse(pizzaCreada));
+    return ResponseEntity.status(HttpStatus.CREATED)
+                         .body(new PizzaResponse(pizzaCreada));
   }
   
   @GetMapping("/predefinidas")

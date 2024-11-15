@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -32,6 +33,7 @@ public class PedidoController {
                             .stream( )
                             .map(id -> pizzaService.obtenerPizzaPorId(id))
                             .collect(Collectors.toList( ));
-    return ResponseEntity.ok(pedidoService.crearPedido(pizzas));
+    return ResponseEntity.status(HttpStatus.CREATED)
+                         .body(pedidoService.crearPedido(pizzas));
   }
 }
