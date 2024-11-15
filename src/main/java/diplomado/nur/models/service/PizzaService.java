@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import diplomado.nur.excepcions.NotFoundException;
 import diplomado.nur.models.dao.PizzaRepository;
 import diplomado.nur.models.dto.PizzaRequest;
 import diplomado.nur.models.entity.Pizza;
@@ -28,6 +29,8 @@ public class PizzaService {
     return pizzaRepository.save(pizza);
   }
   
-  public Pizza obtenerPizzaPorId(Long id) { return pizzaRepository.findById(id)
-                                                                  .get( ); }
+  public Pizza obtenerPizzaPorId(Long id) {
+    return pizzaRepository.findById(id)
+                          .orElseThrow(( ) -> new NotFoundException("No existe la pizza"));
+  }
 }

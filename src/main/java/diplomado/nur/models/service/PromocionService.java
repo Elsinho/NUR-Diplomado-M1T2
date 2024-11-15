@@ -5,7 +5,6 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
@@ -22,34 +21,17 @@ public class PromocionService {
   
   public BigDecimal calcularTotalConPromociones(List<Pizza> pizzas,
                                                 LocalDate fechaPedido) {
-    BigDecimal totalPizzas = pizzas.stream( )
-                                   .map(Pizza::getPrecio)
-                                   .reduce(BigDecimal.ZERO, BigDecimal::add);
-    BigDecimal descuento = BigDecimal.ZERO;
+    BigDecimal totalMonto = BigDecimal.ZERO;
     BigDecimal costoDelivery = BigDecimal.ZERO;
-    log.info("Total pizzas: " + totalPizzas);
-    log.info("Número de promociones: " + (promociones != null ? promociones.size( ) : "null"));
     for(Promocion promocion: promociones) {
       BigDecimal resultadoPromocion = promocion.aplicarPromocion(pizzas, fechaPedido);
-      log.info("Resultado promoción: " + resultadoPromocion);
       if (promocion instanceof PromocionDeliveryGratis) {
         costoDelivery = costoDelivery.add(resultadoPromocion);
       }else {
-        descuento = descuento.add(resultadoPromocion);
+        totalMonto = totalMonto.add(resultadoPromocion);
       }
-      log.info("Descuento acumulado: " + descuento + ", Costo delivery acumulado: " + costoDelivery);
     }
-    return totalPizzas.subtract(descuento)
-                      .add(costoDelivery)
-                      .setScale(2, RoundingMode.HALF_UP);
-  }
-  
-  public List<String> obtenerDescripcionesPromocionesAplicadas(List<Pizza> pizzas,
-                                                               LocalDate fechaPedido) {
-    return promociones.stream( )
-                      .filter(promocion -> promocion.aplicarPromocion(pizzas, fechaPedido)
-                                                    .compareTo(BigDecimal.ZERO) > 0)
-                      .map(Promocion::obtenerDescripcion)
-                      .collect(Collectors.toList( ));
+    return totalMonto.add(costoDelivery)
+                     .setScale(2, RoundingMode.HALF_UP);
   }
 }

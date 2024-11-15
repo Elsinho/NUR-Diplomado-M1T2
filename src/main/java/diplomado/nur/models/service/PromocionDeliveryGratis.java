@@ -16,7 +16,9 @@ public class PromocionDeliveryGratis implements
   @Override
   public BigDecimal aplicarPromocion(List<Pizza> pizzas,
                                      LocalDate fechaPedido) {
-    return (fechaPedido.getDayOfWeek( ) == DayOfWeek.THURSDAY) ? BigDecimal.ZERO : COSTO_BASE_DELIVERY;
+    BigDecimal desc = (fechaPedido.getDayOfWeek( ) == DayOfWeek.THURSDAY) ? BigDecimal.ZERO :
+      COSTO_BASE_DELIVERY;
+    return desc;
   }
   
   @Override
